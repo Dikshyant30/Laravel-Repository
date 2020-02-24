@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\Todo\EloquentTodo;
-use App\Repositories\Todo\TodoRepository;
+use App\Repositories\Todos\TodoRepositoryInterface;
+use App\Repositories\Todos\TodoRepository;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TodoRepository::class,EloquentTodo::class);
+        $this->app->singleton(TodoRepositoryInterface::class,TodoRepository::class);
     }
 
     /**
