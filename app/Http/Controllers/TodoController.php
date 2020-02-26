@@ -5,7 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\Todos\TodoRepositoryInterface;
-
+use Validator;
+use App\Rules\Uppercase;
 
 class TodoController extends Controller
 {
@@ -14,12 +15,19 @@ class TodoController extends Controller
   {
     $this->todo=$todos;
   }
-  public function getAllTodos()
-  {
-    return $this->todo->getAll();
-  }
+
   public function createTodo(Request $request)
   {
+
+    $validate=Validator::make($request->all(),[
+      'text'=>'required',
+      'user_id'=>'required',
+      'completed'=>'required',
+  ] );
+  if($validate->fails())
+  {
+      return response()->json(['error'=>$validate->errors()],401);
+  }
     $attribute = [
       'text'=>$request->input('text'),
       'user_id'=> $request->input('user_id'),
@@ -29,12 +37,36 @@ class TodoController extends Controller
     print_r($attribute);
     return $this->todo->create($attribute);
   }
-
+  public function getAllTodos()
+  {
+    return $this->todo->getAll();
+  }
   public function updateById(Request $request,$id)
   {
+  //   $validate=Validator::make($request->all(),[
+  //     'text'=>'required|max:20',
+  //     'user_id'=>'required|max:20',
+  //     'completed'=>'bail|required|in:1,0',
+  // ] );
+  
+  // if($validate->fails())
+  // {
+  //     return response()->json(['error'=>$validate->errors()],401);
+  // }
+
+  
+$request->validate([
+    'text' => ['required', 'string', new Uppercase],
+    'user_id' => ['required', 'max:20'],
+    'completed' => ['required', 'in:1,0']
+]);
+
+// if($validate->fails())
+//   {
+//       return response()->json(['error'=>$validate->errors()],401);
+//   }
 
     $attribute = [
-
       'text'=>$request->input('text'),
       'user_id'=> $request->input('user_id'),
       'completed' => $request->input('completed')
@@ -43,13 +75,6 @@ class TodoController extends Controller
     
     return $this->todo->update($attribute,$id);
   }
-
-  // public function deleteById($id)
-  // {
-    
-  //    $this->todo->deleteTodo($id);
-  //    return true;
-  // }
   public function destroy($id)
   {
       return $this->todo->delete($id);

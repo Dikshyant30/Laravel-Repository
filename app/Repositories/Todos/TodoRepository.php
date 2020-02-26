@@ -14,10 +14,7 @@ class TodoRepository implements TodoRepositoryInterface {
         return $this->model->all();
     }
 
-    // public function getById($id)
-    // {
-    //     return $this->findById($id);
-    // }
+   
     public function show($id)
     {
         return $this->model->findOrFail($id);
@@ -34,13 +31,6 @@ class TodoRepository implements TodoRepositoryInterface {
         $todo->update($attributes);
         return $todo;
     }
-
-    // public function deleteTodo($id)
-    // {
-    //     // $this->getById($id)->delete();
-    //     // return true;
-    //     return $this->model->destroy($id);
-    // }
     public function delete($id)
     {
         return $this->model->destroy($id);
