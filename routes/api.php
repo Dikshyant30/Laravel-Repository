@@ -21,3 +21,8 @@ Route::post('createTodos','TodoController@createTodo');
 Route::get('show/{id}','TodoController@show');
 Route::put('update/{id}','TodoController@updateById');
 Route::delete('destroy/{id}','TodoController@destroy');
+
+Route::get('file/list','CountryController@countryList');
+Route::post('file/save','CountryController@countrySave');
+
+
